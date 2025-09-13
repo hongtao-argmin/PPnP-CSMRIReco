@@ -34,17 +34,17 @@ parser.add_argument('-isSave', dest='isSave', default = False)
 parser.add_argument('-iSmkdir', dest='iSmkdir', default = True)
 args = parser.parse_args()
 cuda_index = args.cuda_index
-trj_type = args.trj_type #'Radial'#'Spiral' #
-im_type = args.im_type #'Knee' # 
-im_index = args.im_index# choose which test image
-sigma_noise = args.sigma_noise # the noise level for trainning the denoiser
+trj_type = args.trj_type
+im_type = args.im_type
+im_index = args.im_index
+sigma_noise = args.sigma_noise 
 MaxIter = args.MaxIter # maximal number of iterations to recover the image
 noise_level = args.noise_level
-MaxCG_Iter = args.MaxCG_Iter # the number of iteration for CG
+MaxCG_Iter = args.MaxCG_Iter   # the number of iteration for CG
 NetworkType = args.NetworkType #'DnCNN' #'FDnCNN'
-model_type = args.model_type#'scale-equiv' #'ordinary' #
+model_type = args.model_type.  #'scale-equiv' #'ordinary' #
 verbose = args.verbose
-isSave = args.isSave # whether save the reconstructed images
+isSave = args.isSave           # whether save the reconstructed images
 iSmkdir = args.iSmkdir
 #------------------------------------------------------------------
 device = torch.device('cuda:'+cuda_index)
@@ -85,7 +85,7 @@ im_original = im
 # save the GT image.
 if trj_type == 'Spiral':
     if im_type == 'Brain':
-        folderName = '/PPnP/results/Spiral/DeepBrain'+im_index
+        folderName = '/PPnP/results/Spiral/DeepBrain'+im_index # change this to your own path
     elif im_type == 'Knee':
         folderName = '/PPnP/results/Spiral/Knee'+im_index
     if iSmkdir:
@@ -106,9 +106,8 @@ elif trj_type == 'Radial':
             os.mkdir(folderName)
     mps_file = "data/radial/mpsSim32.npy" # sensitivity maps
     mps = np.load(mps_file)
-    #1 1 2 3 5 8 13 21 34 55 89
-    nspokes = 21
-    spokelength = 1024
+    nspokes = 21 # define the number of spokes
+    spokelength = 1024 # the number of points
     ga = np.deg2rad(180 / ((1 + np.sqrt(5)) / 2))
     kx = np.zeros(shape=(nspokes,spokelength,1))
     ky = np.zeros(shape=(nspokes,spokelength,1))
@@ -118,6 +117,7 @@ elif trj_type == 'Radial':
         ky[i,:,0] = np.sin(ga) * kx[i - 1,:,0] + np.cos(ga) * ky[i - 1,:,0]
     trj = np.concatenate((kx,ky),axis=2)
 
+# save GT and Trj in npy form.
 np.save(folderName + '/Real.npy', np.real(im_original))
 np.save(folderName + '/Imag.npy', np.imag(im_original))
 np.save(folderName + '/Trj.npy',trj)
@@ -165,8 +165,8 @@ x_PnP_ISTA,psnr_set_PnP_ISTA,CPUTime_set_PnP_ISTA,fixed_PnP_ISTA = \
 opt.ISTA_PnP(MaxIter,Ax,ATx,b_noise,denoiser = model,save=loc,\
              isPred=False,original=im_original,SaveIter=isSave,verbose = verbose,device=device)
 
-w_pred = lambda x: 2*x-ATx(Ax(x))
 
+w_pred = lambda x: 2*x-ATx(Ax(x))
 algName = '/Pre1_PnP_ISTA'
 loc = folderName+algName
 if iSmkdir:
@@ -175,7 +175,6 @@ if iSmkdir:
 x_PnP_ISTA_Pre1,psnr_set_PnP_ISTA_Pre1,CPUTime_set_PnP_ISTA_Pre1, fixed_PnP_ISTA_Pre1= \
 opt.ISTA_PnP(MaxIter,Ax,ATx,b_noise,denoiser = model,save=loc,isPred=True,\
 w_pred=w_pred,original=im_original,SaveIter=isSave,verbose = verbose,device=device)
-
 
 w_pred = lambda x: 4*x-ATx(Ax((10/3)*x))
 algName = '/Pre2_PnP_ISTA'
