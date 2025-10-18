@@ -1,4 +1,4 @@
-# PyTorch Implementation of PPnP Paper
+# PyTorch Implementation of P^2nP Paper
 
 **Reference:**  
 [Tao Hong](https://hongtao-argmin.github.io), Xiaojian Xu, Jason Hu, and [Jeffrey A. Fessler](https://web.eecs.umich.edu/~fessler/), [Provable Preconditioned Plug-and-Play Approach for Compressed Sensing MRI Reconstruction](https://arxiv.org/abs/2405.03854), IEEE Transactions on Computational Imaging, vol. 10, pp. 1476–1488, Oct. 2024.  
